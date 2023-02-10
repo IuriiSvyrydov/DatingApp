@@ -21,6 +21,8 @@
     "bootstrap": "^5.2.3",
     "font-awesome": "^4.7.0",
     "fontawesome": "^5.6.3",
+    "jquery": "^3.6.3",
+    "ngx-bootstrap": "^10.2.0",
     "ngx-dates-picker": "^9.0.2",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
