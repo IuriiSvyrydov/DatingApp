@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import {  HttpClientModule} from "@angular/common/http";
+import {  HttpClientModule, HTTP_INTERCEPTORS} from "@angular/common/http";
 import { NavComponent } from './nav/nav.component';
 import { FormsModule } from '@angular/forms';
 
@@ -16,6 +16,10 @@ import { MembersComponent } from './members/members.component';
 import { MemberListDetailComponent } from './members/member-list-detail/member-list-detail.component';
 import { MessagesComponent } from './messages/messages.component';
 import { SharedModule } from './_modules/shared/shared.module';
+import { TestErrorComponent } from './errors/test-error/test-error.component';
+import { ErrorsInterceptor } from './_interceptor/errors.interceptor';
+import { NotFoundComponent } from './errors/not-found/not-found.component';
+import { ServerErrorComponent } from './errors/server-error/server-error.component';
 
 
 @NgModule({
@@ -28,7 +32,10 @@ import { SharedModule } from './_modules/shared/shared.module';
     ListsComponent,
     MembersComponent,
     MemberListDetailComponent,
-    MessagesComponent
+    MessagesComponent,
+    TestErrorComponent,
+    NotFoundComponent,
+    ServerErrorComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +47,7 @@ import { SharedModule } from './_modules/shared/shared.module';
 
   ],
   providers: [
-    /*{provide: "baseUrl", useValue:"https://localhost:4200/api", multi:true}*/
+    {provide:HTTP_INTERCEPTORS, useClass: ErrorsInterceptor,multi: true}
   ],
   bootstrap: [AppComponent]
 })

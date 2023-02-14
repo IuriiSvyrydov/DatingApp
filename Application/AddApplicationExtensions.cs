@@ -10,6 +10,8 @@ namespace Application
         public static void AddApplicationLayer(this IServiceCollection services)
         {
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IUserService, UserService>();
+
         }
     }
 }
