@@ -5,9 +5,11 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
 import { TestErrorComponent } from './errors/test-error/test-error.component';
 import { HomeComponent } from './home/home.component';
 import { ListsComponent } from './lists/lists.component';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { MemberListDetailComponent } from './members/member-list-detail/member-list-detail.component';
 import { MemberListComponent } from './members/member-list/member-list.component';
 import { MessagesComponent } from './messages/messages.component';
+import { PreventUnsavedChangesGuard } from './prevent-unsaved-changes.guard';
 import { AuthGuard } from './_guards/auth.guard';
 
 const routes: Routes = [
@@ -17,7 +19,9 @@ const routes: Routes = [
       canActivate: [AuthGuard],
       children:[
          {path: 'members',component: MemberListComponent},
-        {path: 'members/:id',component:MemberListDetailComponent},
+
+        {path: 'members/:username',component:MemberListDetailComponent},
+        {path: 'members/edit',component: MemberEditComponent, canDeactivate:[PreventUnsavedChangesGuard]},
         {path: 'lists',component: ListsComponent},
         {path: 'messages',component: MessagesComponent},
 

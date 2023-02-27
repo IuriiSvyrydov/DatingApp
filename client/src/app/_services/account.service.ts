@@ -17,24 +17,24 @@ currentUser = this.currentUserSource.asObservable();
       map((responce:User)=>{
         const user = responce;
         if (user) {
-          localStorage.setItem('user',JSON.stringify(user));
-          this.currentUserSource.next(user);
+          this.setCurrentUser(user);
         }
       })
     );
 
   }
   setCurrentUser(user:User){
-    this.currentUserSource.next(user);
+
+       localStorage.setItem('user',JSON.stringify(user));
+       this.currentUserSource.next(user);
+
   }
 
 register(model: any){
   return this.http.post<User>(this.baseUrl + 'account/register',model)
           .pipe(map(user=>{
             if (user) {
-              localStorage.setItem('user',JSON.stringify(user));
-              this.currentUserSource.next(user);
-
+              this.setCurrentUser(user);
             }
             return user;
           }));

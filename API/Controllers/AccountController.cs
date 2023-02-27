@@ -1,4 +1,5 @@
-﻿using Infrastructure.Interfaces;
+﻿using AutoMapper;
+using Infrastructure.Interfaces;
 
 namespace API.Controllers
 {
@@ -6,30 +7,35 @@ namespace API.Controllers
     {
         private readonly  DataDbContext _dbContext;
         private readonly ITokenService _tokenService;
-
-        public AccountController(DataDbContext dbContext, ITokenService tokenService)
+        private readonly IMapper _mapper;
+        public AccountController(DataDbContext dbContext, ITokenService tokenService, IMapper mapper)
         {
             _dbContext = dbContext;
             _tokenService = tokenService;
+            _mapper = mapper;
         }
 
         [HttpPost("register")]
         public async Task<ActionResult<UserDTO>> Register(RegisterDTO registerDTO)
         {
             if (await UserExist(registerDTO.UserName)) return BadRequest("UserName is taken");
+
+            var user = _mapper.Map<AppUser>(registerDTO);
             using var hmac = new HMACSHA512();
-            var user = new AppUser
-            {
-                UserName = registerDTO.UserName.ToLower(),
-                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDTO.Password)),
-                PasswordSalt = hmac.Key
-            };
+
+
+            user.UserName = registerDTO.UserName.ToLower();
+            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDTO.Password));
+            user.PasswordSalt = hmac.Key;
+            
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
             return Ok(new UserDTO
             {
                 UserName = user.UserName,
-                Token = _tokenService.CreateToken(user)
+                Token = _tokenService.CreateToken(user),
+                KnownAs = user.KnownAs
+                
             });
         }
 
@@ -49,7 +55,9 @@ namespace API.Controllers
             return Ok(new UserDTO
             {
                 UserName = user.UserName,
-                Token = _tokenService.CreateToken(user)
+                Token = _tokenService.CreateToken(user),
+                PhotoUrl = user.Photos.FirstOrDefault(x=>x.IsMain)?.Url,
+                KnownAs = user.KnownAs
             });
         }
         private async Task<bool> UserExist(string userName)

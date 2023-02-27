@@ -3,14 +3,12 @@
 
 using API.Data;
 using API.Middleware;
-using Application.Services;
-using Infrastructure.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddApplicationService();
+builder.Services.AddApplicationService(builder.Configuration);
 builder.Services.AddInfrastructureExtensions(builder.Configuration);
 
 builder.Services.AddAuth(builder.Configuration);

@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {  HttpClientModule, HTTP_INTERCEPTORS} from "@angular/common/http";
 import { NavComponent } from './nav/nav.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeComponent } from './home/home.component';
@@ -17,9 +17,16 @@ import { MemberListDetailComponent } from './members/member-list-detail/member-l
 import { MessagesComponent } from './messages/messages.component';
 import { SharedModule } from './_modules/shared/shared.module';
 import { TestErrorComponent } from './errors/test-error/test-error.component';
-import { ErrorsInterceptor } from './_interceptor/errors.interceptor';
+import { ErrorsInterceptor } from './_interceptors/errors.interceptor';
 import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
+import { MemberCardComponent } from './members/member-card/member-card.component';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { JwtInterceptor } from './_interceptors/jwt.interceptor';
+import { LoadingInterceptor } from './_interceptors/loading.interceptor';
+import { TextInputComponent } from './_forms/text-input/text-input.component';
+import { DatePickerComponent } from './_forms/date-picker/date-picker.component';
+import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 
 
 @NgModule({
@@ -35,7 +42,13 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
     MessagesComponent,
     TestErrorComponent,
     NotFoundComponent,
-    ServerErrorComponent
+    ServerErrorComponent,
+    MemberCardComponent,
+    MemberEditComponent,
+    TextInputComponent,
+    DatePickerComponent,
+    PhotoEditorComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -44,10 +57,15 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
     FormsModule,
     SharedModule,
     BrowserAnimationsModule,
+    ReactiveFormsModule
+
 
   ],
   providers: [
-    {provide:HTTP_INTERCEPTORS, useClass: ErrorsInterceptor,multi: true}
+    {provide:HTTP_INTERCEPTORS, useClass: ErrorsInterceptor,multi: true},
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true }
+
   ],
   bootstrap: [AppComponent]
 })
